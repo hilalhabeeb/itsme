@@ -1,0 +1,8 @@
+{
+  "name": "AI-Powered Portfolio",
+  "description": "A professional, high-performance resume and portfolio website with an integrated Gemini-powered AI Career Assistant.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
