@@ -17,10 +17,10 @@ export const INITIAL_RESUME_DATA: ResumeData = {
   linkedin: "https://linkedin.com/in/hilalhabeeb",
   
   // IMAGE SETTINGS
-  profileImageUrl: "./hilal.png",
+  profileImageUrl: "/hilal.png",
   
   // RESUME SETTINGS (Place resume.pdf in the same folder)
-  resumeUrl: "./Hilal_Habeeb_Resume.pdf",
+  resumeUrl: "/Hilal_Habeeb_Resume.pdf",
   
   skills: {
     frontend: ["HTML", "CSS", "JavaScript", "React", "WordPress"],
