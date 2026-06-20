@@ -13,6 +13,8 @@ export interface Project {
   tags: string[];
   link?: string;
   imageUrl: string;
+  featured?: boolean;
+  category?: string;
 }
 
 export interface Education {
@@ -33,15 +35,16 @@ export interface ResumeData {
   linkedin: string;
   profileImageUrl: string;
   resumeUrl: string; // Added resume path
-  skills: {
-    frontend: string[];
-    backend: string[];
-    tools: string[];
-    soft: string[];
-  };
+  skills: SkillGroup[];
   experience: Experience[];
   education: Education[];
   projects: Project[];
+}
+
+export interface SkillGroup {
+  title: string;
+  summary: string;
+  items: string[];
 }
 
 export interface ChatMessage {

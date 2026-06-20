@@ -1,8 +1,4 @@
 {
   "name": "AI-Powered Portfolio",
-  "description": "A professional, high-performance resume and portfolio website with an integrated Gemini-powered AI Career Assistant.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
-  ]
+  "description": "A professional software engineering portfolio for Hilal Habeeb, focused on ERP, backend systems, automation, and AI-assisted business solutions."
 }

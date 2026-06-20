@@ -114,7 +114,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         )}
       </AnimatePresence>
 
-      <main className="flex-grow">
+      <main className="relative z-10 flex-grow">
         {children}
       </main>
 
