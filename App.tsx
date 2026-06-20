@@ -25,45 +25,6 @@ import { AIChatPanel } from './components/AIChatPanel';
 import { INITIAL_RESUME_DATA } from './constants';
 import { ResumeData } from './types';
 
-const TECH_BACKDROP_ITEMS = [
-  { label: "Python", icon: <Terminal className="w-4 h-4" />, className: "top-[12%] left-[6%]" },
-  { label: "JavaScript", icon: <Code2 className="w-4 h-4" />, className: "top-[24%] right-[8%]" },
-  { label: "ERPNext", icon: <Layers className="w-4 h-4" />, className: "top-[42%] left-[4%]" },
-  { label: "Frappe", icon: <Database className="w-4 h-4" />, className: "top-[58%] right-[5%]" },
-  { label: "AI", icon: <Cpu className="w-4 h-4" />, className: "top-[72%] left-[12%]" },
-  { label: "Codex", icon: <Sparkles className="w-4 h-4" />, className: "top-[82%] right-[16%]" },
-  { label: "Cloud", icon: <Globe className="w-4 h-4" />, className: "top-[34%] left-[52%]" },
-  { label: "APIs", icon: <ShieldCheck className="w-4 h-4" />, className: "top-[66%] left-[48%]" }
-];
-
-const TechBackdrop: React.FC = () => (
-  <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-70" aria-hidden="true">
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(6,182,212,0.08),transparent_26%),radial-gradient(circle_at_80%_30%,rgba(124,58,237,0.08),transparent_24%),radial-gradient(circle_at_50%_80%,rgba(14,165,233,0.06),transparent_26%)]"></div>
-    {TECH_BACKDROP_ITEMS.map((item, index) => (
-      <motion.div
-        key={item.label}
-        animate={{ y: [0, index % 2 === 0 ? -12 : 12, 0], opacity: [0.12, 0.22, 0.12] }}
-        transition={{ duration: 8 + index, repeat: Infinity, ease: "easeInOut" }}
-        className={`absolute hidden sm:flex items-center gap-2 rounded-2xl border border-cyan-400/10 bg-slate-900/20 px-4 py-2 text-cyan-200/20 blur-[0.2px] ${item.className}`}
-      >
-        {item.icon}
-        <span className="text-[10px] font-black uppercase tracking-[0.28em]">{item.label}</span>
-      </motion.div>
-    ))}
-    {TECH_BACKDROP_ITEMS.slice(0, 5).map((item, index) => (
-      <motion.div
-        key={`${item.label}-mobile`}
-        animate={{ y: [0, index % 2 === 0 ? -8 : 8, 0], opacity: [0.08, 0.16, 0.08] }}
-        transition={{ duration: 7 + index, repeat: Infinity, ease: "easeInOut" }}
-        className={`absolute sm:hidden flex items-center gap-1.5 rounded-xl border border-cyan-400/10 bg-slate-900/20 px-3 py-1.5 text-cyan-200/15 ${item.className}`}
-      >
-        {item.icon}
-        <span className="text-[8px] font-black uppercase tracking-[0.22em]">{item.label}</span>
-      </motion.div>
-    ))}
-  </div>
-);
-
 const App: React.FC = () => {
   const [data] = useState<ResumeData>(INITIAL_RESUME_DATA);
   const [activeSection, setActiveSection] = useState('about');
@@ -113,8 +74,6 @@ const App: React.FC = () => {
 
   return (
     <Layout>
-      <TechBackdrop />
-
       {/* Hero Section */}
       <section id="about" className="relative min-h-[92svh] flex items-center justify-center pt-28 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0 z-0">
