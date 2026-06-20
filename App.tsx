@@ -398,37 +398,41 @@ const App: React.FC = () => {
                 <div className="hidden md:block h-[1px] flex-1 bg-gradient-to-r from-slate-700 to-transparent"></div>
               </div>
 
-              <div className="flex gap-5 overflow-x-auto pb-5 snap-x snap-mandatory">
-                {archiveProjects.map((project, idx) => (
-                  <motion.div
-                    key={project.title}
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.08 }}
-                    className="min-w-[82vw] sm:min-w-[380px] lg:min-w-[420px] snap-start group glass rounded-3xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 flex"
-                  >
-                    <div className="w-28 sm:w-36 shrink-0 relative overflow-hidden">
-                      <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                    </div>
-                    <div className="p-5 flex flex-col min-w-0">
-                      {project.category && (
-                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] block mb-3">
-                          {project.category}
-                        </span>
-                      )}
-                      <h4 className="text-lg font-black text-white mb-2 tracking-tight leading-tight">{project.title}</h4>
-                      <p className="text-slate-400 text-xs leading-relaxed line-clamp-3 font-medium mb-4">{project.description}</p>
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        {project.tags.slice(0, 4).map(tag => (
-                          <span key={tag} className="px-2.5 py-1 bg-slate-900 border border-white/5 text-[8px] font-black text-slate-500 uppercase tracking-widest rounded-lg">
-                            {tag}
-                          </span>
-                        ))}
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-slate-950 to-transparent"></div>
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-slate-950 to-transparent"></div>
+                <div className="hide-scrollbar flex gap-5 overflow-x-auto scroll-smooth py-1 snap-x snap-mandatory">
+                  {archiveProjects.map((project, idx) => (
+                    <motion.div
+                      key={project.title}
+                      initial={{ opacity: 0, x: 30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: idx * 0.08 }}
+                      className="min-w-[82vw] sm:min-w-[380px] lg:min-w-[420px] snap-start group glass rounded-3xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 flex"
+                    >
+                      <div className="w-28 sm:w-36 shrink-0 relative overflow-hidden">
+                        <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+                      <div className="p-5 flex flex-col min-w-0">
+                        {project.category && (
+                          <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] block mb-3">
+                            {project.category}
+                          </span>
+                        )}
+                        <h4 className="text-lg font-black text-white mb-2 tracking-tight leading-tight">{project.title}</h4>
+                        <p className="text-slate-400 text-xs leading-relaxed line-clamp-3 font-medium mb-4">{project.description}</p>
+                        <div className="flex flex-wrap gap-2 mt-auto">
+                          {project.tags.slice(0, 4).map(tag => (
+                            <span key={tag} className="px-2.5 py-1 bg-slate-900 border border-white/5 text-[8px] font-black text-slate-500 uppercase tracking-widest rounded-lg">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
           )}

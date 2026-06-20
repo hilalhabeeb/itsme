@@ -55,6 +55,13 @@
         background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
         background-size: 32px 32px;
       }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
       /* Fluid Breakpoints */
       @media (max-width: 400px) {
         .xs\:block { display: block; }
