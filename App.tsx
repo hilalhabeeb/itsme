@@ -1,13 +1,12 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Code2, 
-  Terminal, 
-  Cpu, 
-  Globe, 
-  Mail, 
-  ExternalLink,
+import {
+  Code2,
+  Terminal,
+  Cpu,
+  Globe,
+  Mail,
   GraduationCap,
   Send,
   Award,
@@ -21,16 +20,17 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { Layout } from './components/Layout';
-import { AIChatPanel } from './components/AIChatPanel';
+import { ProjectPages, SelectedWork, BeyondTeaser } from './components/ProjectPages';
+import { usePortfolioRoute } from './routing';
 import { INITIAL_RESUME_DATA } from './constants';
 import { ResumeData } from './types';
 
 const App: React.FC = () => {
   const [data] = useState<ResumeData>(INITIAL_RESUME_DATA);
-  const [activeSection, setActiveSection] = useState('about');
+  const route = usePortfolioRoute();
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
-  const featuredProjects = data.projects.filter(project => project.featured);
-  const archiveProjects = data.projects.filter(project => !project.featured);
+
+
 
   const skillVisuals = [
     { icon: <Layers className="w-6 h-6" />, color: "from-blue-500 to-cyan-400", shadow: "shadow-blue-500/20" },
@@ -41,29 +41,18 @@ const App: React.FC = () => {
     { icon: <ShieldCheck className="w-6 h-6" />, color: "from-rose-500 to-amber-400", shadow: "shadow-rose-500/20" }
   ];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) setActiveSection(entry.target.id);
-      });
-    }, { threshold: 0.3 });
-
-    document.querySelectorAll('section[id]').forEach(section => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
-
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name');
     const subject = formData.get('subject');
     const message = formData.get('message');
-    
+
     setFormStatus('sending');
-    
+
     // Construct Mailto URL
     const mailtoUrl = `mailto:${data.email}?subject=${encodeURIComponent(String(subject || 'Portfolio Inquiry'))}&body=${encodeURIComponent(`Hi Hilal,\n\nMy name is ${name}.\n\n${message}\n\nBest regards.`)}`;
-    
+
     // Artificial delay for UX feel
     setTimeout(() => {
       window.location.href = mailtoUrl;
@@ -74,6 +63,7 @@ const App: React.FC = () => {
 
   return (
     <Layout>
+      {route.startsWith('/') ? <ProjectPages route={route} /> : <>
       {/* Hero Section */}
       <section id="about" className="relative min-h-[92svh] flex items-center justify-center pt-28 pb-12 px-4 overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -82,32 +72,32 @@ const App: React.FC = () => {
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(340px,430px)] gap-9 lg:gap-16 items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "circOut" }}
             className="text-center lg:text-left order-1 max-w-2xl mx-auto lg:mx-0"
           >
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
               className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.18em] sm:tracking-[0.2em] mb-4"
             >
-              <Sparkles className="w-3 h-3" /> ERP, Backend & AI Automation
+              <Sparkles className="w-3 h-3" /> Business Systems & Interactive Experiences
             </motion.div>
 
             <p className="text-slate-500 font-black uppercase tracking-[0.22em] sm:tracking-[0.32em] text-[9px] md:text-xs mb-4 max-w-sm sm:max-w-none mx-auto lg:mx-0 leading-relaxed">
               {data.title}
             </p>
-            
+
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.6rem] font-black text-white tracking-tighter leading-[0.88] mb-5">
               HILAL <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">
                 HABEEB
               </span>
             </h1>
-            
+
             <p className="text-base md:text-lg text-slate-400 mb-5 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-medium">
               <span className="sm:hidden">
                 Software engineer building ERP, backend, automation, and AI-assisted business systems in Bahrain.
@@ -116,24 +106,24 @@ const App: React.FC = () => {
             </p>
 
             <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-7">
-              {["Frappe / ERPNext", "Python / FastAPI", "AI & OpenCV"].map(item => (
+              {["Frappe / ERPNext", "Python / FastAPI", "React / Three.js"].map(item => (
                 <span key={item} className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-300 text-[9px] sm:text-[10px] font-black uppercase tracking-widest">
                   {item}
                 </span>
               ))}
             </div>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-              <motion.a 
-                href="#contact" 
+              <motion.a
+                href="#/projects"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="w-full sm:w-auto px-7 py-4 bg-white text-slate-950 rounded-xl font-black flex items-center justify-center gap-3 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all"
               >
-                Let's Collaborate <ArrowRight className="w-5 h-5" />
+                Explore My Work <ArrowRight className="w-5 h-5" />
               </motion.a>
-              <motion.a 
-                href={data.resumeUrl} 
+              <motion.a
+                href={data.resumeUrl}
                 download="Hilal Habeeb SWE.pdf"
                 whileHover={{ scale: 1.05 }}
                 className="w-full sm:w-auto px-7 py-4 bg-slate-900/50 backdrop-blur-md text-white rounded-xl font-bold border border-white/10 hover:bg-slate-800 transition-all text-center flex items-center justify-center gap-3"
@@ -143,7 +133,7 @@ const App: React.FC = () => {
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 1.2, ease: "circOut" }}
@@ -154,9 +144,9 @@ const App: React.FC = () => {
               <div className="absolute inset-0 rounded-[2.5rem] border border-cyan-400/15 bg-slate-900/35 shadow-[0_0_80px_rgba(6,182,212,0.12)]"></div>
               <div className="absolute -inset-3 rounded-[2.9rem] border border-white/10 rotate-2"></div>
               <div className="absolute inset-3 overflow-hidden rounded-[2rem] bg-slate-900 border-4 border-slate-950 shadow-inner group cursor-crosshair">
-                <img 
-                  src={data.profileImageUrl} 
-                  alt={data.name} 
+                <img
+                  src={data.profileImageUrl}
+                  alt={data.name}
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/10 to-transparent opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5 sm:p-6">
@@ -164,15 +154,15 @@ const App: React.FC = () => {
                   <span className="text-cyan-400 font-mono text-[10px] sm:text-xs uppercase tracking-widest">Software Engineer</span>
                 </div>
               </div>
-              
-              <motion.div 
+
+              <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity }}
                 className="absolute top-3 -right-3 sm:top-4 sm:-right-4 glass p-3 sm:p-4 rounded-2xl border border-cyan-500/30 shadow-2xl"
               >
                 <Terminal className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
               </motion.div>
-              <motion.div 
+              <motion.div
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, delay: 1 }}
                 className="absolute bottom-3 -left-3 sm:bottom-4 sm:-left-4 glass p-3 sm:p-4 rounded-2xl border border-purple-500/30 shadow-2xl"
@@ -184,11 +174,14 @@ const App: React.FC = () => {
         </div>
       </section>
 
+      <SelectedWork />
+      <BeyondTeaser />
+
       {/* Skills Section */}
       <section id="skills" className="py-16 md:py-24 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl mb-12 md:mb-14">
-            <motion.span 
+            <motion.span
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               className="text-cyan-400 font-black tracking-widest text-xs uppercase block mb-4"
@@ -245,9 +238,9 @@ const App: React.FC = () => {
 
           <div className="relative space-y-7">
             <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-slate-800"></div>
-            
+
             {data.experience.map((exp, idx) => (
-              <motion.div 
+              <motion.div
                 key={idx}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -287,117 +280,6 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-14">
-            <span className="text-blue-400 font-black tracking-widest text-xs uppercase block mb-4">Portfolio</span>
-            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter">Real Projects</h2>
-            <p className="text-slate-500 mt-4 max-w-xl mx-auto">Production-minded systems across ERP, automation, integrations, and computer vision.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
-            {featuredProjects.map((project, idx) => (
-              <motion.div 
-                key={project.title}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                whileHover={{ y: -15 }}
-                className="group glass rounded-3xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 flex flex-col"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    {project.link && project.link !== '#' ? (
-                      <motion.a 
-                        href={project.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        whileHover={{ scale: 1.1 }}
-                        className="p-5 bg-white text-slate-950 rounded-full shadow-2xl"
-                      >
-                        <ExternalLink className="w-6 h-6" />
-                      </motion.a>
-                    ) : (
-                      <span className="px-5 py-3 bg-white text-slate-950 rounded-full shadow-2xl text-[10px] font-black uppercase tracking-widest">
-                        Case Study
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="p-6 flex-grow flex flex-col">
-                  {project.category && (
-                    <span className="text-[9px] font-black text-blue-400 uppercase tracking-[0.25em] block mb-3">
-                      {project.category}
-                    </span>
-                  )}
-                  <h3 className="text-xl font-black text-white mb-3 tracking-tight leading-tight">{project.title}</h3>
-                  <p className="text-slate-400 text-sm mb-5 leading-relaxed line-clamp-4 font-medium">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {project.tags.map(tag => (
-                      <span key={tag} className="px-2.5 py-1 bg-slate-900 border border-white/5 text-[8px] font-black text-slate-500 uppercase tracking-widest rounded-lg">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {archiveProjects.length > 0 && (
-            <div className="mt-12">
-              <div className="flex items-end justify-between gap-6 mb-6">
-                <div>
-                  <span className="text-slate-500 font-black tracking-widest text-[10px] uppercase block mb-3">Earlier Work</span>
-                  <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter">Project Archive</h3>
-                </div>
-                <div className="hidden md:block h-[1px] flex-1 bg-gradient-to-r from-slate-700 to-transparent"></div>
-              </div>
-
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-slate-950 to-transparent"></div>
-                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-slate-950 to-transparent"></div>
-                <div className="hide-scrollbar flex gap-5 overflow-x-auto scroll-smooth py-1 snap-x snap-mandatory">
-                  {archiveProjects.map((project, idx) => (
-                    <motion.div
-                      key={project.title}
-                      initial={{ opacity: 0, x: 30 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: idx * 0.08 }}
-                      className="min-w-[82vw] sm:min-w-[380px] lg:min-w-[420px] snap-start group glass rounded-3xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-500 flex"
-                    >
-                      <div className="w-28 sm:w-36 shrink-0 relative overflow-hidden">
-                        <img src={project.imageUrl} alt={project.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                      </div>
-                      <div className="p-5 flex flex-col min-w-0">
-                        {project.category && (
-                          <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] block mb-3">
-                            {project.category}
-                          </span>
-                        )}
-                        <h4 className="text-lg font-black text-white mb-2 tracking-tight leading-tight">{project.title}</h4>
-                        <p className="text-slate-400 text-xs leading-relaxed line-clamp-3 font-medium mb-4">{project.description}</p>
-                        <div className="flex flex-wrap gap-2 mt-auto">
-                          {project.tags.slice(0, 4).map(tag => (
-                            <span key={tag} className="px-2.5 py-1 bg-slate-900 border border-white/5 text-[8px] font-black text-slate-500 uppercase tracking-widest rounded-lg">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
       {/* Education & Recognized Section */}
       <section id="education" className="py-16 md:py-24 bg-slate-950/20">
         <div className="max-w-7xl mx-auto px-4">
@@ -411,7 +293,7 @@ const App: React.FC = () => {
               </div>
               <div className="space-y-5">
                 {data.education.map((edu, idx) => (
-                  <motion.div 
+                  <motion.div
                     key={idx}
                     whileHover={{ x: 10 }}
                     className="glass p-6 rounded-3xl border border-white/5 hover:border-cyan-500/20 transition-all flex flex-col gap-3"
@@ -443,8 +325,8 @@ const App: React.FC = () => {
                   "AWS Academy Graduate",
                   "Cloud & IoT (NPTEL)"
                 ].map((item, i) => (
-                  <motion.div 
-                    key={i} 
+                  <motion.div
+                    key={i}
                     whileHover={{ scale: 1.05, y: -5 }}
                     className="glass p-4 rounded-2xl border border-white/5 flex items-center gap-3 group"
                   >
@@ -472,10 +354,10 @@ const App: React.FC = () => {
           <div className="glass rounded-[2rem] p-6 md:p-10 lg:p-14 border border-white/10 relative overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)]">
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-cyan-500/10 blur-[180px] -mr-96 -mt-96 animate-pulse"></div>
             <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/10 blur-[180px] -ml-96 -mb-96 animate-pulse"></div>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 relative z-10">
               <div>
-                <motion.span 
+                <motion.span
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   className="text-cyan-400 font-black tracking-[0.3em] text-[10px] uppercase block mb-5"
@@ -488,14 +370,14 @@ const App: React.FC = () => {
                 <p className="text-base md:text-lg text-slate-400 mb-8 max-w-md leading-relaxed font-medium">
                   Looking for a developer who understands both code and business operations? I am open to ERP, backend, automation, and integration work.
                 </p>
-                
+
                 <div className="space-y-5">
                   <a href={`mailto:${data.email}`} className="flex items-center gap-5 group cursor-pointer w-fit">
                     <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-cyan-400 border border-white/5 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-white transition-all shadow-xl">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Direct Signal</p>
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Email</p>
                       <p className="text-lg md:text-xl text-white font-black tracking-tight group-hover:text-cyan-400 transition-colors">{data.email}</p>
                     </div>
                   </a>
@@ -505,7 +387,7 @@ const App: React.FC = () => {
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Mobile Link</p>
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Phone</p>
                       <p className="text-lg md:text-xl text-white font-black tracking-tight group-hover:text-emerald-400 transition-colors">{data.phone}</p>
                     </div>
                   </a>
@@ -515,14 +397,14 @@ const App: React.FC = () => {
                       <Globe className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Operational Base</p>
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Based in</p>
                       <p className="text-lg md:text-xl text-white font-black tracking-tight">{data.location}</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-10">
-                  <motion.a 
+                  <motion.a
                     href={data.resumeUrl}
                     download="Hilal Habeeb SWE.pdf"
                     whileHover={{ x: 10 }}
@@ -536,32 +418,32 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <motion.form 
+              <motion.form
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                className="space-y-5 bg-slate-950/40 p-6 md:p-7 rounded-3xl border border-white/5 backdrop-blur-md relative" 
+                className="space-y-5 bg-slate-950/40 p-6 md:p-7 rounded-3xl border border-white/5 backdrop-blur-md relative"
                 onSubmit={handleFormSubmit}
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Identity</label>
-                    <input required name="name" type="text" placeholder="Full Name" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white placeholder:text-slate-700 font-bold" />
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1" htmlFor="contact-name">Name</label>
+                    <input id="contact-name" required name="name" type="text" placeholder="Full Name" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white placeholder:text-slate-700 font-bold" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Subject</label>
-                    <input required name="subject" type="text" placeholder="Project or Opportunity" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white placeholder:text-slate-700 font-bold" />
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1" htmlFor="contact-subject">Subject</label>
+                    <input id="contact-subject" required name="subject" type="text" placeholder="Project or Opportunity" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white placeholder:text-slate-700 font-bold" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Transmission</label>
-                  <textarea required name="message" rows={4} placeholder="What vision are we bringing to life?" className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white resize-none placeholder:text-slate-700 font-bold"></textarea>
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1" htmlFor="contact-message">Message</label>
+                  <textarea id="contact-message" required name="message" rows={4} placeholder="Tell me about your project or opportunity." className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white resize-none placeholder:text-slate-700 font-bold"></textarea>
                 </div>
-                
-                <button 
+
+                <button
                   disabled={formStatus !== 'idle'}
                   className={`w-full py-4 rounded-xl font-black text-base transition-all shadow-2xl flex items-center justify-center gap-3 ${
-                    formStatus === 'sent' 
-                    ? 'bg-emerald-500 text-white' 
+                    formStatus === 'sent'
+                    ? 'bg-emerald-500 text-white'
                     : 'bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white hover:scale-[1.02] active:scale-[0.98] shadow-cyan-500/30'
                   }`}
                 >
@@ -579,7 +461,7 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      <AIChatPanel resumeData={data} />
+      </>}
     </Layout>
   );
 };

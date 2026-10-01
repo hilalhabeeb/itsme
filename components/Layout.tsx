@@ -15,8 +15,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   const navLinks = [
     { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
+    { name: 'Projects', href: '#/projects' },
+    { name: 'Beyond Bahrain', href: '#/beyond-bahrain' },
     { name: 'Experience', href: '#experience' },
   ];
 
@@ -24,11 +24,12 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   return (
     <div className="min-h-screen flex flex-col selection:bg-cyan-500/30 overflow-x-hidden">
-      <nav className={`fixed top-0 w-full z-[80] transition-all duration-500 ${scrolled ? 'py-3' : 'py-6'}`}>
+      <a href="#main-content" className="skip-link">Skip to content</a>
+      <nav aria-label="Main navigation" className={`fixed top-0 w-full z-[80] transition-all duration-500 ${scrolled ? 'py-3' : 'py-6'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`mx-auto max-w-5xl glass px-4 md:px-6 py-3 rounded-full flex justify-between items-center border border-white/10 shadow-2xl transition-all duration-300 ${scrolled ? 'bg-slate-950/80 backdrop-blur-xl' : ''}`}>
             {/* Logo */}
-            <div className="flex items-center gap-3">
+            <a href="#about" aria-label="Hilal Habeeb home" className="flex items-center gap-3">
               <motion.div 
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 className="w-9 h-9 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full flex items-center justify-center text-slate-950 font-black text-sm shadow-lg shadow-cyan-500/20 cursor-pointer"
@@ -36,7 +37,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                 HH
               </motion.div>
               <span className="text-white font-black tracking-tighter text-lg hidden xs:block">HABEEB</span>
-            </div>
+            </a>
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
@@ -63,7 +64,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               <button 
                 onClick={toggleMenu}
                 className="p-2 text-white hover:bg-white/10 rounded-full transition-colors"
-                aria-label="Toggle Menu"
+                aria-label="Toggle Menu" aria-expanded={isMobileMenuOpen} aria-controls="mobile-menu"
               >
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -79,7 +80,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[70] md:hidden bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-center p-8"
+            id="mobile-menu" className="fixed inset-0 z-[70] md:hidden bg-slate-950/95 backdrop-blur-2xl flex flex-col items-center justify-center p-8"
           >
             <div className="space-y-8 text-center">
               {navLinks.map((link, idx) => (
@@ -114,7 +115,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         )}
       </AnimatePresence>
 
-      <main className="relative z-10 flex-grow">
+      <main id="main-content" tabIndex={-1} className="relative z-10 flex-grow">
         {children}
       </main>
 
@@ -126,12 +127,12 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               HH
             </div>
             <div className="text-slate-400 text-xs font-mono uppercase tracking-widest">
-              Digital Architect &copy; {new Date().getFullYear()}
+              Hilal Habeeb &copy; {new Date().getFullYear()}
             </div>
           </div>
           <div className="flex gap-8">
-            <a href="https://github.com/hilalhabeeb" target="_blank" className="text-slate-500 hover:text-cyan-400 transition-colors text-sm font-bold uppercase tracking-widest">GitHub</a>
-            <a href="https://linkedin.com/in/hilalhabeeb" target="_blank" className="text-slate-500 hover:text-blue-400 transition-colors text-sm font-bold uppercase tracking-widest">LinkedIn</a>
+            <a href="https://github.com/hilalhabeeb" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-cyan-400 transition-colors text-sm font-bold uppercase tracking-widest">GitHub</a>
+            <a href="https://linkedin.com/in/hilalhabeeb" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors text-sm font-bold uppercase tracking-widest">LinkedIn</a>
           </div>
         </div>
       </footer>

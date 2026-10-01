@@ -3,7 +3,7 @@ import { ResumeData } from './types';
 export const INITIAL_RESUME_DATA: ResumeData = {
   name: "HILAL HABEEB",
   title: "Software Engineer | Frappe / ERPNext & Python Backend",
-  bio: "Software engineer in Bahrain building scalable real-world business systems across ERP, CRM, sales, purchase, inventory, accounting, HR, and operations. I work with Frappe/ERPNext, Python, FastAPI, Django, React, and REST integrations to turn complex workflows into secure, maintainable applications, with added experience in AI/ML automation and computer vision.",
+  bio: "I build business software that makes everyday operations simpler, from ERPNext workflows and Python integrations to interactive web experiences. Based in Bahrain, I combine practical engineering with a curiosity for the places and systems around me.",
   email: "hilalhabb@gmail.com",
   phone: "+973 34567505",
   location: "Tubli, Bahrain",
