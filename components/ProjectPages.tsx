@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, ArrowRight, ExternalLink, Wind, Code2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink, Code2 } from "lucide-react";
 import { INITIAL_RESUME_DATA } from "../constants";
 import {
   PROJECT_DETAILS,
@@ -25,24 +25,19 @@ const tags = (items: string[]) => (
   </div>
 );
 
-function WtcArt() {
+function WtcPreview({ priority = false }: { priority?: boolean }) {
   return (
-    <div
-      className="wtc-art"
-      aria-label="Stylized illustration of twin towers and three wind turbines"
-      role="img"
-    >
-      <div className="wtc-halo" />
-      <div className="wtc-tower wtc-left" />
-      <div className="wtc-tower wtc-right" />
-      {[0, 1, 2].map((i) => (
-        <div className="wtc-bridge" key={i} style={{ top: `${41 + i * 15}%` }}>
-          <Wind aria-hidden="true" className="wtc-rotor" />
-        </div>
-      ))}
-      <span className="absolute bottom-5 left-5 text-[10px] tracking-widest text-slate-400 uppercase">
-        Illustration · Bahrain WTC
-      </span>
+    <div className="wtc-preview">
+      <img
+        src="/bahrain-wtc-energy-lab.webp"
+        alt="Bahrain WTC Energy Lab showing the twin towers, three turbines, wind controls and simulated energy output."
+        width={1856}
+        height={1030}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
+        className="block w-full h-auto"
+      />
     </div>
   );
 }
@@ -60,6 +55,9 @@ function ProjectCard({ index }: { index: number }) {
           src={p.imageUrl}
           alt=""
           loading="lazy"
+          decoding="async"
+          width={800}
+          height={450}
           className="h-full w-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
         />
       </div>
@@ -112,7 +110,7 @@ export function BeyondTeaser() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <div className="grid lg:grid-cols-2 overflow-hidden rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-cyan-950/40 to-slate-900/50">
-        <WtcArt />
+        <WtcPreview />
         <div className="p-7 md:p-12 flex flex-col justify-center">
           <p className={eyebrow}>A personal series · Episode 001</p>
           <h2 className="text-4xl md:text-5xl font-black tracking-tight mt-4">
@@ -139,7 +137,7 @@ export function BeyondTeaser() {
 function WtcCaseStudy() {
   return (
     <>
-      <div className="grid lg:grid-cols-2 items-center gap-10 mb-14">
+      <div className="grid gap-8 mb-14">
         <div>
           <p className={eyebrow}>Beyond Bahrain / 001</p>
           <h1 className="text-4xl md:text-6xl font-black tracking-tight mt-5 leading-tight">
@@ -160,7 +158,15 @@ function WtcCaseStudy() {
             Explore live project <ExternalLink size={17} />
           </a>
         </div>
-        <WtcArt />
+        <a
+          href="/bahrain-wtc-energy-lab.webp"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View the WTC project screenshot full-size (opens in a new tab)"
+          className="block overflow-hidden rounded-2xl border border-white/10"
+        >
+          <WtcPreview priority />
+        </a>
       </div>
       <div className="grid sm:grid-cols-3 gap-4 mb-14">
         {[
@@ -359,7 +365,7 @@ export function ProjectPages({ route }: { route: string }) {
           you can explore.
         </p>
         <div className="grid lg:grid-cols-2 rounded-3xl overflow-hidden border border-white/10">
-          <WtcArt />
+          <WtcPreview />
           <div className="p-8 md:p-12 bg-slate-900/50 flex flex-col justify-center">
             <p className={eyebrow}>001 · Interactive energy lab</p>
             <h2 className="text-3xl font-bold mt-4 mb-4">
@@ -385,7 +391,7 @@ export function ProjectPages({ route }: { route: string }) {
             </div>
           </div>
         </div>
-        <p className="mt-10 text-slate-500">
+        <p className="mt-10 text-slate-400">
           More explorations will join the series as they are built.
         </p>
       </>
@@ -418,13 +424,23 @@ export function ProjectPages({ route }: { route: string }) {
             ),
           )}
         </div>
+        <p role="status" className="sr-only">
+          {filter === "All"
+            ? "7 projects"
+            : filter === "Business systems"
+              ? "4 projects"
+              : filter === "Computer vision"
+                ? "2 projects"
+                : "1 project"}{" "}
+          shown.
+        </p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {(filter === "All" || filter === "Beyond Bahrain") && (
             <a
               href="#/beyond-bahrain/001"
               className="glass rounded-2xl overflow-hidden border border-white/10 hover:border-cyan-400/40 flex flex-col"
             >
-              <WtcArt />
+              <WtcPreview />
               <div className="p-6">
                 <p className={eyebrow}>Beyond Bahrain · 001</p>
                 <h2 className="text-2xl font-bold my-3">

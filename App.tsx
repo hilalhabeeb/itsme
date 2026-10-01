@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import {
   Code2,
   Terminal,
@@ -28,7 +28,8 @@ import { ResumeData } from './types';
 const App: React.FC = () => {
   const [data] = useState<ResumeData>(INITIAL_RESUME_DATA);
   const route = usePortfolioRoute();
-  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const reducedMotion = useReducedMotion();
+  const [formStatus, setFormStatus] = useState<'idle' | 'ready'>('idle');
 
 
 
@@ -48,21 +49,16 @@ const App: React.FC = () => {
     const subject = formData.get('subject');
     const message = formData.get('message');
 
-    setFormStatus('sending');
 
     // Construct Mailto URL
     const mailtoUrl = `mailto:${data.email}?subject=${encodeURIComponent(String(subject || 'Portfolio Inquiry'))}&body=${encodeURIComponent(`Hi Hilal,\n\nMy name is ${name}.\n\n${message}\n\nBest regards.`)}`;
 
-    // Artificial delay for UX feel
-    setTimeout(() => {
-      window.location.href = mailtoUrl;
-      setFormStatus('sent');
-      setTimeout(() => setFormStatus('idle'), 3000);
-    }, 800);
+    window.location.href = mailtoUrl;
+    setFormStatus('ready');
   };
 
   return (
-    <Layout>
+    <Layout route={route}>
       {route.startsWith('/') ? <ProjectPages route={route} /> : <>
       {/* Hero Section */}
       <section id="about" className="relative min-h-[92svh] flex items-center justify-center pt-28 pb-12 px-4 overflow-hidden">
@@ -73,13 +69,13 @@ const App: React.FC = () => {
 
         <div className="relative z-10 max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(340px,430px)] gap-9 lg:gap-16 items-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "circOut" }}
             className="text-center lg:text-left order-1 max-w-2xl mx-auto lg:mx-0"
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
               className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.18em] sm:tracking-[0.2em] mb-4"
@@ -87,7 +83,7 @@ const App: React.FC = () => {
               <Sparkles className="w-3 h-3" /> Business Systems & Interactive Experiences
             </motion.div>
 
-            <p className="text-slate-500 font-black uppercase tracking-[0.22em] sm:tracking-[0.32em] text-[9px] md:text-xs mb-4 max-w-sm sm:max-w-none mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-slate-400 font-black uppercase tracking-[0.22em] sm:tracking-[0.32em] text-[9px] md:text-xs mb-4 max-w-sm sm:max-w-none mx-auto lg:mx-0 leading-relaxed">
               {data.title}
             </p>
 
@@ -134,7 +130,7 @@ const App: React.FC = () => {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
+            initial={reducedMotion ? false : { opacity: 0, scale: 0.9, rotate: -5 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 1.2, ease: "circOut" }}
             className="relative flex justify-center lg:justify-end order-2"
@@ -145,6 +141,9 @@ const App: React.FC = () => {
               <div className="absolute -inset-3 rounded-[2.9rem] border border-white/10 rotate-2"></div>
               <div className="absolute inset-3 overflow-hidden rounded-[2rem] bg-slate-900 border-4 border-slate-950 shadow-inner group cursor-crosshair">
                 <img
+                  width={390}
+                  height={390}
+                  fetchPriority="high"
                   src={data.profileImageUrl}
                   alt={data.name}
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 ease-in-out"
@@ -182,7 +181,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl mb-12 md:mb-14">
             <motion.span
-              initial={{ opacity: 0 }}
+              initial={reducedMotion ? false : { opacity: 0 }}
               whileInView={{ opacity: 1 }}
               className="text-cyan-400 font-black tracking-widest text-xs uppercase block mb-4"
             >
@@ -190,7 +189,7 @@ const App: React.FC = () => {
             </motion.span>
             <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-6">
               Systems I build <br />
-              <span className="text-slate-500">and the stack behind them.</span>
+              <span className="text-slate-400">and the stack behind them.</span>
             </h2>
           </div>
 
@@ -200,7 +199,7 @@ const App: React.FC = () => {
               return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
@@ -211,7 +210,7 @@ const App: React.FC = () => {
                   {visual.icon}
                 </div>
                 <h3 className="text-xl font-black text-white mb-3 tracking-tight">{group.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed mb-5 font-medium">{group.summary}</p>
+                <p className="text-slate-400 text-sm leading-relaxed mb-5 font-medium">{group.summary}</p>
                 <div className="flex flex-wrap gap-2 mt-auto">
                   {group.items.map(skill => (
                     <span key={skill} className="px-2.5 py-1 bg-slate-900/80 border border-white/5 text-slate-400 text-[9px] font-bold uppercase tracking-widest rounded-lg hover:text-white hover:border-white/20 transition-all">
@@ -242,7 +241,7 @@ const App: React.FC = () => {
             {data.experience.map((exp, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, x: -20 }}
+                initial={reducedMotion ? false : { opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 className="relative pl-6 md:pl-10"
@@ -254,7 +253,7 @@ const App: React.FC = () => {
                       <h3 className="text-2xl font-black text-white mb-2 leading-tight">{exp.role}</h3>
                       <p className="text-cyan-400 font-bold tracking-widest text-xs uppercase">{exp.company}</p>
                     </div>
-                    <span className="px-4 py-2 bg-slate-900 border border-white/10 rounded-xl text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+                    <span className="px-4 py-2 bg-slate-900 border border-white/10 rounded-xl text-[10px] font-mono text-slate-400 uppercase tracking-widest">
                       {exp.period}
                     </span>
                   </div>
@@ -268,7 +267,7 @@ const App: React.FC = () => {
                   </ul>
                   <div className="flex flex-wrap gap-2">
                     {exp.skills.map(s => (
-                      <span key={s} className="px-3 py-1.5 bg-slate-950/50 border border-white/5 text-slate-500 text-[9px] font-black uppercase tracking-widest rounded-full group-hover:text-cyan-400 group-hover:border-cyan-500/20 transition-all">
+                      <span key={s} className="px-3 py-1.5 bg-slate-950/50 border border-white/5 text-slate-400 text-[9px] font-black uppercase tracking-widest rounded-full group-hover:text-cyan-400 group-hover:border-cyan-500/20 transition-all">
                         {s}
                       </span>
                     ))}
@@ -301,7 +300,7 @@ const App: React.FC = () => {
                     <span className="text-[10px] font-black text-cyan-500 uppercase tracking-[0.3em] block">{edu.period}</span>
                     <h3 className="text-xl font-black text-white leading-tight">{edu.degree}</h3>
                     <p className="text-slate-400 font-bold text-sm tracking-tight">{edu.institution}</p>
-                    <p className="text-xs text-slate-500 bg-slate-900/80 p-4 rounded-xl border border-white/5 leading-relaxed font-medium">
+                    <p className="text-xs text-slate-400 bg-slate-900/80 p-4 rounded-xl border border-white/5 leading-relaxed font-medium">
                       {edu.details}
                     </p>
                   </motion.div>
@@ -358,7 +357,7 @@ const App: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 relative z-10">
               <div>
                 <motion.span
-                  initial={{ opacity: 0 }}
+                  initial={reducedMotion ? false : { opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   className="text-cyan-400 font-black tracking-[0.3em] text-[10px] uppercase block mb-5"
                 >
@@ -377,7 +376,7 @@ const App: React.FC = () => {
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Email</p>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Email</p>
                       <p className="text-lg md:text-xl text-white font-black tracking-tight group-hover:text-cyan-400 transition-colors">{data.email}</p>
                     </div>
                   </a>
@@ -387,7 +386,7 @@ const App: React.FC = () => {
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Phone</p>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Phone</p>
                       <p className="text-lg md:text-xl text-white font-black tracking-tight group-hover:text-emerald-400 transition-colors">{data.phone}</p>
                     </div>
                   </a>
@@ -397,7 +396,7 @@ const App: React.FC = () => {
                       <Globe className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Based in</p>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Based in</p>
                       <p className="text-lg md:text-xl text-white font-black tracking-tight">{data.location}</p>
                     </div>
                   </div>
@@ -419,41 +418,40 @@ const App: React.FC = () => {
               </div>
 
               <motion.form
-                initial={{ opacity: 0, x: 20 }}
+                initial={reducedMotion ? false : { opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 className="space-y-5 bg-slate-950/40 p-6 md:p-7 rounded-3xl border border-white/5 backdrop-blur-md relative"
                 onSubmit={handleFormSubmit}
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1" htmlFor="contact-name">Name</label>
-                    <input id="contact-name" required name="name" type="text" placeholder="Full Name" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white placeholder:text-slate-700 font-bold" />
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1" htmlFor="contact-name">Name</label>
+                    <input autoComplete="name" id="contact-name" required name="name" type="text" placeholder="Full Name" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white placeholder:text-slate-400 font-bold" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1" htmlFor="contact-subject">Subject</label>
-                    <input id="contact-subject" required name="subject" type="text" placeholder="Project or Opportunity" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white placeholder:text-slate-700 font-bold" />
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1" htmlFor="contact-subject">Subject</label>
+                    <input id="contact-subject" required name="subject" type="text" placeholder="Project or Opportunity" className="w-full bg-slate-900/50 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white placeholder:text-slate-400 font-bold" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1" htmlFor="contact-message">Message</label>
-                  <textarea id="contact-message" required name="message" rows={4} placeholder="Tell me about your project or opportunity." className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white resize-none placeholder:text-slate-700 font-bold"></textarea>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1" htmlFor="contact-message">Message</label>
+                  <textarea id="contact-message" required name="message" rows={4} placeholder="Tell me about your project or opportunity." className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all text-white resize-none placeholder:text-slate-400 font-bold"></textarea>
                 </div>
 
                 <button
-                  disabled={formStatus !== 'idle'}
+                  type="submit"
                   className={`w-full py-4 rounded-xl font-black text-base transition-all shadow-2xl flex items-center justify-center gap-3 ${
-                    formStatus === 'sent'
+                    formStatus === 'ready'
                     ? 'bg-emerald-500 text-white'
                     : 'bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white hover:scale-[1.02] active:scale-[0.98] shadow-cyan-500/30'
                   }`}
                 >
-                  {formStatus === 'idle' && <>SEND MESSAGE <Send className="w-6 h-6" /></>}
-                  {formStatus === 'sending' && <>OPENING EMAIL...</>}
-                  {formStatus === 'sent' && <>MESSAGE READY <CheckCircle2 className="w-6 h-6" /></>}
+                  {formStatus === 'idle' && <>OPEN EMAIL <Send className="w-6 h-6" /></>}
+                  {formStatus === 'ready' && <>OPEN EMAIL AGAIN <CheckCircle2 className="w-6 h-6" /></>}
                 </button>
 
-                <p className="text-[9px] text-center text-slate-600 font-bold uppercase tracking-[0.2em]">
-                  Opens your email client with the message ready to send
+                <p role="status" className="text-xs text-center text-slate-400 font-bold uppercase tracking-[0.2em]">
+                  {formStatus === 'ready' ? 'Your draft opens in your email app. Review it and press Send there.' : 'Opens your email app with a draft. You send the message from there.'}
                 </p>
               </motion.form>
             </div>
