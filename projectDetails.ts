@@ -89,7 +89,7 @@ export const PROJECT_DETAILS: ProjectDetail[] = [
     source: "https://github.com/hilalhabeeb/epark.bh",
   },
 ];
-export const WTC_LIVE_URL = "https://bahrain-wtc.hilalhabeeb-bh.workers.dev/";
+export const WTC_LIVE_URL = "https://hilalhabeeb.online/wtc";
 export const WTC_STACK = [
   "React",
   "TypeScript",
